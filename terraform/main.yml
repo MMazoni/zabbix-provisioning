@@ -1,0 +1,7 @@
+---
+- name: Set up Zabbix in EC2 Instance
+  hosts: all
+  become: yes
+  roles:
+    - docker
+    - zabbix-agent2

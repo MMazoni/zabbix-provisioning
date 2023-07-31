@@ -1,0 +1,2 @@
+[sandbox]
+3.45.185.35 ansible_user=ec2-user ansible_host=3.45.185.35 ansible_connection=ssh

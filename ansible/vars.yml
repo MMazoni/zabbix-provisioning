@@ -1,0 +1,4 @@
+---
+zabbix_hostname: SBX-DEV
+host_ip_address: 3.137.102.57
+host: sandbox

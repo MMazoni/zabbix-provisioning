@@ -1,0 +1,50 @@
+---
+- hosts: "{{ host }}"
+  become: yes
+  tasks:
+    - name: Add IP into Server in zabbix_agent2.conf
+      lineinfile:
+        path: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^Server=.*$'
+        line: "Server={{ host_ip_address }}"
+        backup: yes
+
+    - name: Add IP into ServerActive in zabbix_agent2.conf
+      lineinfile:
+        path: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^ServerActive=.*$'
+        line: "ServerActive={{ host_ip_address }}"
+        backup: yes
+
+    - name: Add Hostname in zabbix_agent2.conf
+      lineinfile:
+        path: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^Hostname=.*$'
+        line: "Hostname={{ zabbix_hostname }}"
+        backup: yes
+
+    - name: Add BufferSize in zabbix_agent2.conf
+      lineinfile:
+        path: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^#?\s*BufferSize=.*$'
+        line: "BufferSize=1000"
+        backup: yes
+
+    - name: Always start zabbix-agent2 as root
+      blockinfile:
+        path: /etc/systemd/system/zabbix-agent2.service.d/override.conf
+        create: true
+        block: |
+          [Service]
+          User=root
+          Group=root
+
+    - name: Just force systemd to reread configs
+      systemd:
+        daemon_reload: true
+
+    - name: Restart Zabbix Agent 2
+      service:
+        name: zabbix-agent2
+        state: restarted
+        enabled: yes
